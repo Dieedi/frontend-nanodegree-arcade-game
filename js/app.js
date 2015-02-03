@@ -10,6 +10,7 @@ var Player = function() {
 }
 
 Player.prototype.handleInput = function(key) {
+    // check the key and location to move player
     if (key === "up") {
         if (this.y - 83 >= -15) {
             this.y = this.y - (83);
@@ -27,6 +28,10 @@ Player.prototype.handleInput = function(key) {
             this.x = this.x - (101);
         }
     }
+
+    // debugging
+    console.log(this.x, this.y)
+
 }
 
 Player.prototype.update = function() {
