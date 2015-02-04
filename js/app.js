@@ -30,8 +30,7 @@ Player.prototype.handleInput = function(key) {
     }
 
     // debugging
-    console.log(this.x, this.y)
-
+    console.log(this.x, this.y);
 }
 
 Player.prototype.update = function() {
