@@ -5,32 +5,62 @@ var Player = function() {
     // adding image for player char
     this.sprite = 'images/char-boy.png';
     // placing player
-    this.x = 200;
-    this.y = 400;
+    this.left = 200;
+    this.top = 400;
+
+    // check for collisions
+    this.checkCollisions = function() {
+        // check for collision with enemies using objects boxes
+        allEnemies.forEach(function(enemy) {
+            if (player.top <= enemy.bottom && player.bottom >= enemy.top && player.right >= enemy.left && player.left <= enemy.right) {
+                var message = "Ooooh, that's so sad :(";
+                player.reset(message);
+            }
+        });
+
+        // check for collision with water
+        if (player.top <= 60) {
+            var message = "Congratulation !";
+            player.reset(message);
+        }
+    };
+
+    // replace player to starting point
+    this.reset = function(message) {
+        player.left = 200;
+        player.top = 400;
+        alert(message);
+    };
 }
 
 Player.prototype.handleInput = function(key) {
     // check the key and location to move player
     if (key === "up") {
-        if (this.y - 83 >= -15) {
-            this.y = this.y - (83);
+        if (this.top - 83 >= -15) {
+            this.top = this.top - (83);
         }
     } else if (key === "down") {
-        if (this.y + 83 <= 400) {
-            this.y = this.y + (83);
+        if (this.top + 83 <= 400) {
+            this.top = this.top + (83);
         }
     } else if (key === "right") {
-        if (this.x + 83 <= 402) {
-            this.x = this.x + (101);
+        if (this.left + 83 <= 402) {
+            this.left = this.left + (101);
         }
     } else {
-        if (this.x - 83 >= -2) {
-            this.x = this.x - (101);
+        if (this.left - 83 >= -2) {
+            this.left = this.left - (101);
         }
     }
 
+    // create/update box for player
+    this.top = this.top;
+    this.bottom = this.top + 80;
+    this.right = this.left + 60;
+    this.left = this.left;
+
     // debugging
-    console.log(this.x, this.y);
+    console.log(this.left, this.top);
 }
 
 Player.prototype.update = function() {
@@ -38,7 +68,7 @@ Player.prototype.update = function() {
 }
 
 Player.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    ctx.drawImage(Resources.get(this.sprite), this.left, this.top);
 }
 
 // Now instantiate your objects.
