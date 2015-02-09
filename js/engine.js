@@ -25,8 +25,8 @@ var Engine = (function(global) {
         ctx = canvas.getContext('2d'),
         lastTime;
 
-    canvas.width = 505;
-    canvas.height = 606;
+    canvas.width = Canvas.width;
+    canvas.height = Canvas.height;
     doc.body.appendChild(canvas);
 
     /* This function serves as the kickoff point for the game loop itself
@@ -105,6 +105,22 @@ var Engine = (function(global) {
      * they are just drawing the entire screen over and over.
      */
     function render() {
+        /* Must generate first row with "arrival" stone block
+         */
+        CanvasObjects.render();
+        if (CanvasObjects.startStoneX > 0) {
+            var col = CanvasObjects.startStoneX / 101;
+            for (i = 0; i < col; i++) {
+                ctx.drawImage(Resources.get(CanvasObjects.water), i * 101, 0);
+            }
+        }
+        if (CanvasObjects.startStoneX < Canvas.width) {
+            var col = (CanvasObjects.startStoneX + 101) / 101;
+            for (i = col; i < (Canvas.width / 101); i++) {
+                ctx.drawImage(Resources.get(CanvasObjects.water), i * 101, 0);
+            }
+        }
+
         /* This array holds the relative URL to the image used
          * for that particular row of the game level.
          */
@@ -116,15 +132,16 @@ var Engine = (function(global) {
                 'images/grass-block.png',   // Row 1 of 2 of grass
                 'images/grass-block.png'    // Row 2 of 2 of grass
             ],
-            numRows = 6,
-            numCols = 5,
+            numRows = Canvas.row,
+            numCols = Canvas.col,
             row, col;
 
         /* Loop through the number of rows and columns we've defined above
          * and, using the rowImages array, draw the correct image for that
          * portion of the "grid"
+         * change row start to one after adding loop for first stoneblock
          */
-        for (row = 0; row < numRows; row++) {
+        for (row = 1; row < numRows; row++) {
             for (col = 0; col < numCols; col++) {
                 /* The drawImage function of the canvas' context element
                  * requires 3 parameters: the image to draw, the x coordinate

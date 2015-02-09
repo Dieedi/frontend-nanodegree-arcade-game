@@ -80,7 +80,7 @@ Enemy.prototype.update = function(dt) {
     }
 
     // remove enemies if out of screen
-    if (this.x > 500) {
+    if (this.x > Canvas.width) {
         // no more than 4 enemies in a row (decreases enemies per row)
         if (this.y == 234) {
             enemyOnRow1--;
@@ -135,14 +135,4 @@ function createEnemies (multi, add, first) {
             enemyOnRow3++;
         }
     }
-}
-
-// Generate a random rounded number with given values
-function randomize (multi, add) {
-    // if their is only one parameter
-    if (!add) {
-        add = 0;
-    }
-    var gen = Math.floor((Math.random() * multi) + add);
-    return gen;
 }

@@ -18,14 +18,20 @@ var Player = function() {
             }
         });
 
-        // check for collision with water
-        if (player.top <= 60) {
+        // check for collision with top stone block
+        if (player.top <= 60 && ((player.left + 2) == CanvasObjects.startStoneX)) {
             var message = "Congratulation !";
+            player.reset(message);
+        }
+
+        // check for collision with water
+        else if (player.top <= 60) {
+            var message = "You don't know how to swim...";
             player.reset(message);
         }
     };
 
-    // replace player to starting point
+    // replace player to starting point / trigger message
     this.reset = function(message) {
         player.left = 200;
         player.top = 400;
@@ -40,11 +46,11 @@ Player.prototype.handleInput = function(key) {
             this.top = this.top - (83);
         }
     } else if (key === "down") {
-        if (this.top + 83 <= 400) {
+        if (this.top + 83 <= Canvas.height - 181) {
             this.top = this.top + (83);
         }
     } else if (key === "right") {
-        if (this.left + 83 <= 402) {
+        if (this.left + 83 <= Canvas.width - 103) {
             this.left = this.left + (101);
         }
     } else {
@@ -87,3 +93,39 @@ document.addEventListener('keyup', function(e) {
 
     player.handleInput(allowedKeys[e.keyCode]);
 });
+
+// Generate a random rounded number with given values
+function randomize (multi, add) {
+    // if their is only one parameter
+    if (!add) {
+        add = 0;
+    }
+    var gen = Math.floor((Math.random() * multi) + add);
+    return gen;
+}
+
+/*
+    World building
+*/
+
+var canvasSize = function() {
+    this.col = 8;
+    this.row = 6;
+    this.width = this.col * 101;
+    this.height = this.row * 101;
+}
+
+var Canvas = new canvasSize;
+
+var canvasObjects = function() {
+    this.stone = 'images/stone-block.png';
+    this.water = 'images/water-block.png';
+    this.grass = 'images/grass-block.png';
+    this.startStoneX = randomize(Canvas.col) * 101;
+};
+
+canvasObjects.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.stone), this.startStoneX, 0);
+}
+
+var CanvasObjects = new canvasObjects;
