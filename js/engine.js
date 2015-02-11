@@ -25,8 +25,10 @@ var Engine = (function(global) {
         ctx = canvas.getContext('2d'),
         lastTime;
 
-    canvas.width = Canvas.width;
-    canvas.height = Canvas.height;
+    // canvas col, row width and height are now manage in app.js
+    canvas.width = canvasSize.width;
+    canvas.height = canvasSize.height;
+
     doc.body.appendChild(canvas);
 
     /* This function serves as the kickoff point for the game loop itself
@@ -66,7 +68,8 @@ var Engine = (function(global) {
     function init() {
         reset();
         lastTime = Date.now();
-        createEnemies(3, 3, 1);
+        // Create first enemies one on each row
+        createEnemies(3, 2, 1);
         main();
     }
 
@@ -95,7 +98,9 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             enemy.update(dt);
         });
-        player.update();
+        // player.update();
+        // canvasObjects update box of star
+        canvasObjects.update();
     }
 
     /* This function initially draws the "game level", it will then call
@@ -105,35 +110,40 @@ var Engine = (function(global) {
      * they are just drawing the entire screen over and over.
      */
     function render() {
-        /* Must generate first row with "arrival" stone block
+        /*
+         *  Must generate first row with "arrival" stone block
+         *  Generate water around stone block
          */
-        CanvasObjects.render();
-        if (CanvasObjects.startStoneX > 0) {
-            var col = CanvasObjects.startStoneX / 101;
+        ctx.drawImage(Resources.get(canvasObjects.stone), canvasObjects.startStoneX, 0);
+        if (canvasObjects.startStoneX > 0) {
+            var col = canvasObjects.startStoneX / 101;
             for (i = 0; i < col; i++) {
-                ctx.drawImage(Resources.get(CanvasObjects.water), i * 101, 0);
+                ctx.drawImage(Resources.get(canvasObjects.water), i * 101, 0);
             }
         }
-        if (CanvasObjects.startStoneX < Canvas.width) {
-            var col = (CanvasObjects.startStoneX + 101) / 101;
-            for (i = col; i < (Canvas.width / 101); i++) {
-                ctx.drawImage(Resources.get(CanvasObjects.water), i * 101, 0);
+        if (canvasObjects.startStoneX < canvasSize.width) {
+            var col = (canvasObjects.startStoneX + 101) / 101;
+            for (i = col; i < (canvasSize.width / 101); i++) {
+                ctx.drawImage(Resources.get(canvasObjects.water), i * 101, 0);
             }
         }
 
-        /* This array holds the relative URL to the image used
-         * for that particular row of the game level.
+        /*
+         *  This array holds the relative URL to the image used
+         *  for that particular row of the game level.
          */
         var rowImages = [
                 'images/water-block.png',   // Top row is water
                 'images/stone-block.png',   // Row 1 of 3 of stone
                 'images/stone-block.png',   // Row 2 of 3 of stone
+                'images/grass-block.png',   // adding some grass and stone
+                'images/stone-block.png',   // maybe find a function to auto grow size
                 'images/stone-block.png',   // Row 3 of 3 of stone
                 'images/grass-block.png',   // Row 1 of 2 of grass
                 'images/grass-block.png'    // Row 2 of 2 of grass
             ],
-            numRows = Canvas.row,
-            numCols = Canvas.col,
+            numRows = canvasSize.row,   // canvas col, row width and height are now manage in app.js
+            numCols = canvasSize.col,
             row, col;
 
         /* Loop through the number of rows and columns we've defined above
@@ -165,10 +175,12 @@ var Engine = (function(global) {
         /* Loop through all of the objects within the allEnemies array and call
          * the render function you have defined.
          */
+        // render star and princess
+        canvasObjects.render();
+
         allEnemies.forEach(function(enemy) {
             enemy.render();
         });
-
         player.render();
     }
 
@@ -189,7 +201,9 @@ var Engine = (function(global) {
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug.png',
-        'images/char-boy.png'
+        'images/char-boy.png',
+        'images/char-princess-girl.png',
+        'images/Star.png'
     ]);
     Resources.onReady(init);
 

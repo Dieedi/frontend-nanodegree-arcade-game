@@ -1,6 +1,6 @@
 /*
-    Enemy generator and controler
-*/
+ *   Enemy generator and controler
+ */
 
 // declaring counter for 3 first enemies
 var count = 0;
@@ -8,45 +8,47 @@ var count = 0;
 // Enemies our player must avoid
 var Enemy = function(first) {
     /*
-        Variables applied to each of our instances go here,
-        we've provided one for you to get started
-
-        The image/sprite for our enemies, this uses
-        a helper we've provided to easily load images
-    */
+     *  Variables applied to each of our instances go here,
+     *  we've provided one for you to get started
+     *
+     *  The image/sprite for our enemies, this uses
+     *  a helper we've provided to easily load images
+     */
     this.sprite = 'images/enemy-bug.png';
 
     /*
-        Y location should be random and stick to each stone-block row.
-        Current rows is 3, 83px between each row
-        First bugs should be at least one on each row
-    */
-    if (first && count < 3) {
+     *  Y location should be random and stick to each stone-block row.
+     *  Current rows is 3, 83px between each row
+     *  First bugs should be at least one on each row
+     */
+    if (first && count < 4) {
         count++;
-        this.y = (count * 83) - 15;
+        if (count <= 2) {
+            this.y = (count * 83) - 15;
+        }
+        if (count > 2) {
+            this.y = ((count + 1) * 83) - 15;
+        }
         this.x = randomize(400);
     } else {
         /*
-            randomly add enemies but without too much enemy on one row
-            random number should be between 68, 151 and 234
-            so rand between 1 and 3 by 83px - 15px
+            randomly add enemies
         */
-        if (enemyOnRow1 >= 2) {
-            this.y = (randomize(2, 1) * 83) - 15;
-        } else if (enemyOnRow2 >= 2) {
-            // random row for only adding on row at 68px or 234px
-            var randRow = randomize(100);
-            if (randRow <= 50) {
-                this.y = 68;
-            }
-            if (randRow > 50) {
-                this.y = 234;
-            }
-        } else if (enemyOnRow3 >= 2) {
-            this.y = (randomize(2, 2) * 83) - 15;
-        } else {
-            this.y = (randomize(3, 1) * 83) - 15;
+        var randRow = randomize(100);
+        if (randRow <= 20) {
+            this.y = 68;
         }
+        if (randRow > 20 && randRow <= 50) {
+            this.y = 151;
+        }
+        if (randRow > 50 && randRow <= 75) {
+            this.y = 317;
+        }
+        if (randRow > 75) {
+            this.y = 400;
+        }
+
+
         // bugs' starting point behind the scene ! After first 3 was placed
         this.x = -100;
     }
@@ -68,7 +70,7 @@ Enemy.prototype.update = function(dt) {
     // create/update box for enemies
     this.top = this.y;
     this.bottom = this.y + 70;
-    this.right = this.x + 100;
+    this.right = this.x + 80;
     this.left = this.x;
 
     // check for enemies position to create new
@@ -80,18 +82,7 @@ Enemy.prototype.update = function(dt) {
     }
 
     // remove enemies if out of screen
-    if (this.x > Canvas.width) {
-        // no more than 4 enemies in a row (decreases enemies per row)
-        if (this.y == 234) {
-            enemyOnRow1--;
-        }
-        if (this.y == 151) {
-            enemyOnRow2--;
-        }
-        if (this.y == 68) {
-            enemyOnRow3--;
-        }
-
+    if (this.x > canvasSize.width) {
         var index = allEnemies.indexOf(this);
         allEnemies.splice(index, 1);
     }
@@ -106,11 +97,6 @@ Enemy.prototype.render = function() {
 // allEnemies should accept any new occurences .push(variables)
 var allEnemies = [];
 
-// enemies per row counters
-var enemyOnRow1 = 0;
-var enemyOnRow2 = 0;
-var enemyOnRow3 = 0;
-
 // should random enemies number, y location, speed ...
 // Math.floor => round numbers
 // Math.random() => gives a number between 0 and 1
@@ -124,15 +110,5 @@ function createEnemies (multi, add, first) {
     for (var i = 0; i <= rand; i++) {
         var enemy = new Enemy(first);
         allEnemies.push(enemy);
-        // no more than 4 enemies in a row (add enemy per row)
-        if (enemy.y === 234) {
-            enemyOnRow1++;
-        }
-        if (enemy.y === 151) {
-            enemyOnRow2++;
-        }
-        if (enemy.y === 68) {
-            enemyOnRow3++;
-        }
     }
 }
