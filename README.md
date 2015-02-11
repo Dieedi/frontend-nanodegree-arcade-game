@@ -2,9 +2,13 @@ frontend-nanodegree-arcade-game
 ===============================
 
 Play with UP/LEFT/RIGHT/DOWN arrows
+
 Bugs are dangerous
+
 you can't swin
+
 Star can help you
+
 Free the princess !
 
 
