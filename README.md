@@ -1,6 +1,8 @@
 frontend-nanodegree-arcade-game
 ===============================
 
+You can play here : http://thefaq.info/game/index.html
+
 Play with UP/LEFT/RIGHT/DOWN arrows
 
 Bugs are dangerous
